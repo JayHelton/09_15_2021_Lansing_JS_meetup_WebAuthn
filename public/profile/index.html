@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://unpkg.com/@simplewebauthn/browser@2.1.0/dist/simplewebauthn-browser.min.js"></script>
+  <link rel="stylesheet" href="../styles.css" />
+  <title>SimpleWebAuthn as a Second Factor</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🚪&nbsp;Profile</h1>
+    <button id="logout">Logout</button>
+    <pre id="user-data"></pre>
+  </div>
+
+  <script>
+    const pre = document.getElementById('user-data');
+    const logoutBtn = document.getElementById("logout");
+
+    logoutBtn.addEventListener("click", () => {
+        window.location = "/logout";
+    });
+
+    fetch('/api/user')
+    .then(res => res.json())
+    .then(data => {
+      pre.innerHTML = JSON.stringify(data);
+    });
+  </script>
+</body>
+
+</html>

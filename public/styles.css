@@ -1,0 +1,75 @@
+* {
+  font-size: 16px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+pre {
+	overflow: auto;
+	width: 500px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f7f7f7;
+}
+
+h1 {
+  font-size: 2.25rem;
+}
+
+h2 {
+  font-size: 1.75rem;
+}
+
+button {
+  padding: 0.5rem;
+  background: white;
+  border-radius: 0.25rem;
+}
+
+button:active {
+  background: #eeeeee;
+}
+
+button:hover {
+  background: #efefef;
+}
+
+.examples-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.example {
+  width: 25rem;
+  padding: 125px;
+  outline: 1px dashed gray;
+}
+
+.container {
+  max-width: 70rem;
+  margin: auto;
+  text-align: center;
+}
+
+#error {
+  color: red;
+}
+
+#success {
+  color: #11a000;
+}
+
+
+/* Desktop Styles */
+@media(min-width: 75rem) {
+  * {
+    font-size: 24px;
+  }
+}

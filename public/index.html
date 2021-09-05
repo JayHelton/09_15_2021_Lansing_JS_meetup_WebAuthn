@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://unpkg.com/@simplewebauthn/browser"></script>
+    <script src="./webauthn.js"></script>
+    <title>SimpleWebAuthn Example Site</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>SimpleWebAuthn for Passwordless Authentication</h1>
+      <input id="username" type="text" required placeholder="Username" />
+      <button id="attest">Sign Up</button>
+      <button id="assert">Login</button>
+      <div>
+        <input type="checkbox" id="enableUsernameless">
+        <label for="enableUsernameless">Allow Usernameless</label>
+      </div>
+      <p id="success"></p>
+      <p id="error"></p>
+    </div>
+    <script>
+const registerBtn = document.getElementById("attest");
+const authenticateBtn = document.getElementById("assert");
+const enableUsernamelessBox = document.getElementById("enableUsernameless");
+const errorElem = document.getElementById("error");
+const usernameInput = document.getElementById("username");
+
+if (!browserSupportsWebauthn()) {
+  elemBegin.style.display = "none";
+  errorElem.innerText = "It seems this browser doesn't support WebAuthn...";
+}
+
+  authenticateBtn.addEventListener("click", async () => {
+            console.log(enableUsernamelessBox.checked)
+    errorElem.innerHTML = "";
+    try {
+      const { verified } = await authenticateWebauthn({ username: usernameInput.value });
+      if (verified) {
+        window.location = "/profile";
+      }
+    } catch (error) {
+      errorElem.innerText = error;
+    }
+  });
+
+  registerBtn.addEventListener("click", async () => {
+    errorElem.innerHTML = "";
+    try {
+      const { verified } = await registerWebauthn({
+              requireResidentKey: enableUsernamelessBox.checked,
+              username: usernameInput.value
+            });
+
+      if (verified) {
+        window.location = "/profile";
+      }
+
+    } catch (error) {
+      if (error.name === "InvalidStateError") {
+        errorElem.innerText =
+          "Error: Authenticator was probably already registered by user";
+      } else {
+        errorElem.innerText = error;
+      }
+    }
+  });
+    </script>
+  </body>
+</html>
