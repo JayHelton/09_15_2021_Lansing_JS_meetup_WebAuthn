@@ -1,15 +1,15 @@
 import base64url from "base64url";
 import crypto from 'crypto';
 import {
-  generateAttestationOptions,
-  verifyAttestationResponse,
-  generateAssertionOptions,
-  verifyAssertionResponse,
+  generateRegistrationOptions,
+  verifyRegistrationResponse,
+  generateAuthenticationOptions,
+  verifyAuthenticationResponse,
 } from "@simplewebauthn/server";
 
 import type {
-  AttestationCredentialJSON,
-  AssertionCredentialJSON,
+  RegistrationCredentialJSON,
+  AuthenticationCredentialJSON,
   AuthenticatorDevice,
 } from "@simplewebauthn/typescript-types";
 
@@ -51,7 +51,7 @@ export default function (database: any) {
       devices: [],
     };
 
-    const options = generateAttestationOptions({
+    const options = generateRegistrationOptions({
       rpName: "SimpleWebAuthn Example",
       rpID,
       userID: user.username,
@@ -76,14 +76,14 @@ export default function (database: any) {
   });
 
   router.post("/verify-attestation", async (req, res) => {
-    const body: AttestationCredentialJSON = req.body;
+    const body: RegistrationCredentialJSON = req.body;
     const user = database[req.cookies.user];
     const expectedChallenge = user.currentChallenge;
 
     let verification;
 
     try {
-      verification = await verifyAttestationResponse({
+      verification = await verifyRegistrationResponse({
         credential: body,
         expectedChallenge: `${expectedChallenge}`,
         expectedOrigin,
@@ -125,7 +125,7 @@ export default function (database: any) {
 
     if (!user) {
      /**
-      * When using passwordless, we must maintain server side data
+      * When using usernameless, we must maintain server side data
       * in order to keep track of the stateful transaction.
       * Without a temporary data store, the challenges created would be lost
       */
@@ -135,7 +135,7 @@ export default function (database: any) {
       database[user.username] = user;
     }
 
-    const options = generateAssertionOptions({
+    const options = generateAuthenticationOptions({
       timeout: 60000,
       allowCredentials: user?.devices?.map((dev) => ({
         id: dev.credentialID,
@@ -155,7 +155,7 @@ export default function (database: any) {
     let dbAuthenticator;
     let user = database[req.cookies.user];
 
-    const body: AssertionCredentialJSON = req.body;
+    const body: AuthenticationCredentialJSON = req.body;
     const expectedChallenge = user!.currentChallenge;
   
     user = database[body.response.userHandle];
@@ -175,7 +175,7 @@ export default function (database: any) {
     let verification;
 
     try {
-      verification = verifyAssertionResponse({
+      verification = verifyAuthenticationResponse({
         credential: body,
         expectedChallenge: `${expectedChallenge}`,
         expectedOrigin,
