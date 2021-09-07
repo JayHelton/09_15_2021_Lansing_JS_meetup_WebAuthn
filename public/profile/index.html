@@ -4,16 +4,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://unpkg.com/@simplewebauthn/browser@2.1.0/dist/simplewebauthn-browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/pgrabovets/json-view@master/dist/jsonview.bundle.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pgrabovets/json-view@master/dist/jsonview.bundle.css" />
   <link rel="stylesheet" href="../styles.css" />
   <title>SimpleWebAuthn as a Second Factor</title>
 </head>
 
 <body>
   <div class="container">
-    <h1>🚪&nbsp;Profile</h1>
+    <h1>Profile</h1>
     <button id="logout">Logout</button>
-    <pre id="user-data"></pre>
+    <div class="root"></div>
   </div>
 
   <script>
@@ -25,9 +26,11 @@
     });
 
     fetch('/api/user')
-    .then(res => res.json())
+    .then(res => res.text())
     .then(data => {
-      pre.innerHTML = JSON.stringify(data);
+      const tree = JsonView.createTree(data);
+      JsonView.render(tree, document.querySelector('.root'));
+      JsonView.expandChildren(tree);
     });
   </script>
 </body>

@@ -94,10 +94,10 @@ export default function (database: any) {
       return res.status(400).send({ error: error.message });
     };
 
-    const { verified, attestationInfo } = verification;
+    const { verified, registrationInfo } = verification;
 
-    if (verified && attestationInfo) {
-      const { credentialPublicKey, credentialID, counter } = attestationInfo;
+    if (verified && registrationInfo) {
+      const { credentialPublicKey, credentialID, counter } = registrationInfo;
 
       const existingDevice = user.devices.find(
         (device) => device.credentialID === credentialID
@@ -187,10 +187,10 @@ export default function (database: any) {
       return res.status(400).send({ error: error.message });
     }
 
-    const { verified, assertionInfo } = verification;
+    const { verified, authenticationInfo } = verification;
 
     if (verified) {
-      dbAuthenticator.counter = assertionInfo.newCounter;
+      dbAuthenticator.counter = authenticationInfo.newCounter;
       user.loggedIn = true;
       res.cookie("user", user.username, { maxAge: 900000 });
       res.send({ verified });
