@@ -10,7 +10,7 @@ import { LoggedInUser } from "./routes/webauthn";
 
 const app = express();
 const host = "0.0.0.0";
-const port = 3000;
+const port =  process.env.PORT || 3000;
 
 app.use(cookieParser());
 app.use(express.static("./public/"));
