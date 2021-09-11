@@ -15,8 +15,8 @@ import type {
 
 import { Router } from "express";
 
-const rpID = "localhost";
-const expectedOrigin = `http://${rpID}:3000`;
+const rpID = process.env.HOST || "localhost" ;
+const expectedOrigin = `http://${rpID}:${3000 || process.env.PORT}`;
 
 const router = Router();
  
@@ -54,14 +54,16 @@ export default function (database: any) {
     const options = generateRegistrationOptions({
       rpName: "SimpleWebAuthn Example",
       rpID,
+      // userID should not be sensitive information, like email
       userID: user.username,
       userName: user.username,
       // display name is shown when the browser lists available residential credentials on
       // the webauthn compatible device
-      userDisplayName: `${rpID} - ${(new Date()).toISOString()}`,
+      userDisplayName: `${user.username} - ${rpID}`,
       timeout: 60000,
-      attestationType: "indirect",
+      attestationType: "direct",
       authenticatorSelection: {
+        // authenticatorAttachment: 'cross-platform',
         userVerification: 'required',
         residentKey: requireResidentKey ? 'required' : 'discouraged'
       },
