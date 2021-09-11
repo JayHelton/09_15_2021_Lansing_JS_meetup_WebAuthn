@@ -16,7 +16,7 @@ import type {
 import { Router } from "express";
 
 const rpID = process.env.HOST || "localhost" ;
-const expectedOrigin = `${rpID}`;
+const expectedOrigin = `${rpID === "localhost" ? "http://" : "https://"}${rpID}`;
 
 const router = Router();
  

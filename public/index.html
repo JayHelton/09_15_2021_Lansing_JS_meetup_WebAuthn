@@ -34,7 +34,6 @@ if (!browserSupportsWebauthn()) {
 }
 
   authenticateBtn.addEventListener("click", async () => {
-            console.log(enableUsernamelessBox.checked)
     errorElem.innerHTML = "";
     try {
       const { verified } = await authenticateWebauthn({ username: usernameInput.value });
@@ -49,10 +48,14 @@ if (!browserSupportsWebauthn()) {
   registerBtn.addEventListener("click", async () => {
     errorElem.innerHTML = "";
     try {
+      if (!enableUsernamelessBox.checked && !usernameInput.value) {
+        errorElem.innerText = "Input your username or check the allow usernameless box."
+        return;
+      }
       const { verified } = await registerWebauthn({
-              requireResidentKey: enableUsernamelessBox.checked,
-              username: usernameInput.value
-            });
+        requireResidentKey: enableUsernamelessBox.checked,
+        username: usernameInput.value
+      });
 
       if (verified) {
         window.location = "/profile";
